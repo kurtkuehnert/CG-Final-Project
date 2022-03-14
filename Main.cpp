@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
+#include <cstring>
 
 #ifdef _WIN32
 #include "Include/glew.h"
@@ -93,7 +94,7 @@ void displayFunc()
 	cg_key key;
 
 	// Tastatur abfragen
-	// Achtung: einmaliges Betätigen funktioniert so nur mit glutIgnoreKeyRepeat(true) (siehe main())
+	// Achtung: einmaliges Betï¿½tigen funktioniert so nur mit glutIgnoreKeyRepeat(true) (siehe main())
 	if (key.keyState(27))
 	{
 		exit(0); // Escape -> Programm beenden
@@ -140,7 +141,7 @@ void displayFunc()
 	// Zeichenmodus einstellen (Wireframe on/off)
 	glPolygonMode(GL_FRONT_AND_BACK, globState.drawMode);
 
-	// Backface Culling on/off, Standardwert ist Entfernen der Rückseiten
+	// Backface Culling on/off, Standardwert ist Entfernen der Rï¿½ckseiten
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
 	if (globState.cullMode) glEnable(GL_CULL_FACE);
@@ -174,7 +175,7 @@ void displayFunc()
 	// die Szene zeichnen 
 	drawScene();
 
-	// den Hilfetext über die Szene zeichnen, wenn gefordert
+	// den Hilfetext ï¿½ber die Szene zeichnen, wenn gefordert
 	help.draw();
 
 	// Wireframe deaktivieren
@@ -186,7 +187,7 @@ void displayFunc()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ÜBUNG 12 - Blending ////////////////////////////////////////////////////////////////////////////////////////
+// ï¿½BUNG 12 - Blending ////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //	Texturdefinition
@@ -221,7 +222,7 @@ const char* objects_paths[num_objects] = { "chrome.obj", "top.obj", "glass.obj",
 											"axis.obj", "trailer.obj", "cargo_t.obj", "ground_concrete.obj", "ground_street.obj" };
 
 cg_object3D objects[num_objects];
-// Objektbezeichner für den Zugriff auf die Wavefront Objekte
+// Objektbezeichner fï¿½r den Zugriff auf die Wavefront Objekte
 enum {
 	TRUCK_CHROME = 0,
 	TRUCK_TOP,
@@ -241,7 +242,7 @@ enum {
 void loadObjects()
 {
 
-	// alle Objekte Laden, wenn der Pfad verfügbar ist (Pfad != "")
+	// alle Objekte Laden, wenn der Pfad verfï¿½gbar ist (Pfad != "")
 	for (int i = 0; i < num_objects; i++)
 		if (strlen(objects_paths[i]) > 0)
 		{
@@ -250,14 +251,14 @@ void loadObjects()
 			strcat(file, ".");
 #endif // _MSC_VER
 			strcat(file, objects_dir);
-			strcat(file, objects_paths[i]);	// file enthält nun den vollständigen Dateinamen
+			strcat(file, objects_paths[i]);	// file enthï¿½lt nun den vollstï¿½ndigen Dateinamen
 
 			// Hier das Objekt laden
-			// --> Aufruf von loadobject(file, false) für objects[i]
+			// --> Aufruf von loadobject(file, false) fï¿½r objects[i]
 			objects[i].load(file, true);
 		}
 
-	// nun setzen wir die Materialeigenschaften für die Objekte
+	// nun setzen wir die Materialeigenschaften fï¿½r die Objekte
 	objects[TRUCK_CHROME].setMaterial(0.8, 0.8, 0.8, 1.0, 1.0, 120.0, 0.0);
 	objects[TRUCK_TOP].setMaterial(0.9, 0.2, 0.3, 1.0, 0.5, 90.0, 0.0);
 
@@ -281,7 +282,7 @@ void drawAxis(bool doubleWheel) {
 	// eine Achse
 	objects[AXIS].draw();
 
-	// Aufruf für linkes Rad
+	// Aufruf fï¿½r linkes Rad
 	glPushMatrix();
 		glTranslatef(-0.9f, 0.0, 0.0);    // Versatz nach Links (-x)
 		objects[WHEEL_SCREWS].draw();
@@ -290,10 +291,10 @@ void drawAxis(bool doubleWheel) {
 		else objects[WHEEL_SINGLE].draw();
 	glPopMatrix();
 
-	// Aufruf für rechts Rad
+	// Aufruf fï¿½r rechts Rad
 	glPushMatrix();
 		glTranslatef(0.9, 0.0, 0.0);      // Versatz nach Rechts (+x)
-		glRotatef(180.0, 0.0, 1.0, 0.0);  // 180° Drehung um Hochachse (Y)
+		glRotatef(180.0, 0.0, 1.0, 0.0);  // 180ï¿½ Drehung um Hochachse (Y)
 		objects[WHEEL_SCREWS].draw();
 		if (doubleWheel)
 			objects[WHEEL_DOUBLE].draw();
@@ -303,11 +304,11 @@ void drawAxis(bool doubleWheel) {
 };
 
 #pragma region VEHICLE
-// Superklasse für die Fahrzeuge
+// Superklasse fï¿½r die Fahrzeuge
 class CVehicle {
 protected: 
 	CVector _pos = CVector(0, 0, 0);	//  Position [m]
-	float _rot = 0;						//  Rotation [°]
+	float _rot = 0;						//  Rotation [ï¿½]
 public: 
 	void setPos(CVector pos) { _pos = pos; }
 	void setPos(float posX, float posZ) { _pos = CVector(posX, 0, posZ); }
@@ -321,7 +322,7 @@ public:
 #pragma endregion
 
 #pragma region TRUCK
-// Klasse für den Truck
+// Klasse fï¿½r den Truck
 class CTruck : public CVehicle {
 
 public:
@@ -386,7 +387,7 @@ public:
 #pragma endregion // TRUCK
 
 #pragma region TRAILER
-// Klasse für die Verwaltung eines Trailers
+// Klasse fï¿½r die Verwaltung eines Trailers
 class CTrailer : public CVehicle {
 private: 
 	cg_object3D* _geometry;
@@ -435,7 +436,7 @@ public:
 					}
 
 					// TODO U12.3: die Texturierung aktivieren und die Textur _texture binden,
-					// vorher den gewünschten Texturmodus einstellen, siehe Übung 11
+					// vorher den gewï¿½nschten Texturmodus einstellen, siehe ï¿½bung 11
 					if (globState.textureMode) {
 						// glEnable(...);
 
@@ -447,21 +448,21 @@ public:
 
 					// Der Quader ist ein konvexes Objekt. Damit lassen sich Fehler in der 
 					// transparenten Darstellung mittels BackFace Culling adressieren.
-					// Prinzip: zuerst die Rückseiten zeichnen, damit werden nur die weiter 
-					// entfernten Flächen gerastert, danach die Vorderseiten. 
+					// Prinzip: zuerst die Rï¿½ckseiten zeichnen, damit werden nur die weiter 
+					// entfernten Flï¿½chen gerastert, danach die Vorderseiten. 
 
 					// wir merken uns den aktuellen Zustand des Cullings
 					GLboolean cullingIsEnabled = false;
 					glGetBooleanv(GL_CULL_FACE, &cullingIsEnabled);
 
-					// Culling aktivieren für Vorderseiten
+					// Culling aktivieren fï¿½r Vorderseiten
 					// glEnable(...);
 					// glCullFace(...);
 
-					// die Rückseiten zeichnen
+					// die Rï¿½ckseiten zeichnen
 					// _geometry->draw();  
 
-					// Culling umschalten auf Rückseiten
+					// Culling umschalten auf Rï¿½ckseiten
 					// glCullFace(...);
 					
 					// die Vorderseiten zeichnen
@@ -491,7 +492,7 @@ public:
 // globale Instanzen
 CTruck truck;
 
-// TODO U12.3: hier eine Textur wählen, Index 0 = container.bmp, index 1 = opengl.bmp
+// TODO U12.3: hier eine Textur wï¿½hlen, Index 0 = container.bmp, index 1 = opengl.bmp
 CTrailer trailer1(&objects[TRAILER_CARGO], &textures[0]);
 CTrailer trailer2(&objects[TRAILER_CARGO], &textures[1]);
 
@@ -511,7 +512,7 @@ void drawScene()
 		globState.blendMode = !globState.blendMode; // Blending on/off
 	}
 
-	// Straße bei Y=0 zeichnen
+	// Straï¿½e bei Y=0 zeichnen
 	objects[GROUND_OBJ1].draw();
 	objects[GROUND_OBJ2].draw();
 
@@ -572,7 +573,7 @@ void drawScene()
 	} while (switched);
 
 	// TODO U12.2 Schritt3 - Zeichnen in der richtigen Reihenfolge
-	// zunächst das unsortierte Zeichnen entfernen
+	// zunï¿½chst das unsortierte Zeichnen entfernen
 	truck.draw();
 	trailer1.draw();
 	trailer2.draw();

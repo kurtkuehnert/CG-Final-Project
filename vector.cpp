@@ -2,6 +2,7 @@
 
 #include <cstring> /* for memcpy() */
 #include <iostream>
+#include <cmath>
 
 CVector::CVector()
 {
