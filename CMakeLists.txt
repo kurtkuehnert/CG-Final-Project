@@ -16,8 +16,6 @@ add_executable(Main
     object.cpp
     window.cpp
     assets.cpp
-    planet.cpp
-    planetSimulation.cpp
-    Main.cpp)
+    main.cpp)
 
 target_link_libraries(Main ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES} ${GLM_LIBRARIES})

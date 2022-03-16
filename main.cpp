@@ -6,10 +6,7 @@
 #include "window.h"
 #include "input.h"
 #include "light.h"
-#include "planetSimulation.h"
 #include "assets.h"
-
-PlanetSimulation *planetSimulation;
 
 void setCamera() {
     double x, y, z, The, Phi;
@@ -41,7 +38,6 @@ void drawScene() {
     textures[SPACESHIP_RED].bind();
     objects[SPACESHIP].draw();
     glDisable(GL_TEXTURE_2D);
-    planetSimulation->render();
 }
 
 void displayFunc() {
@@ -106,12 +102,9 @@ void displayFunc() {
 
 int main(int argc, char **argv) {
     init(argc, argv);
+
     loadObjects();
     loadTextures();
-
-    PlanetSimulation test = PlanetSimulation(objects);
-
-    planetSimulation = &test;
 
     glutMainLoop();
 
