@@ -2,13 +2,13 @@
 
 #include <cstring>
 #include "image.h"
-#include "wavefront.h"
+#include "object.h"
 
 #define NUM_TEXTURES 3
 #define NUM_OBJECTS 12
 
 extern Image textures[NUM_TEXTURES];
-extern cg_object3D objects[NUM_OBJECTS];
+extern Object objects[NUM_OBJECTS];
 extern const char *texture_files[NUM_TEXTURES];
 extern const char *objects_files[NUM_OBJECTS];
 

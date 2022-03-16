@@ -1,286 +1,246 @@
-// *** Help-Module, PrakCG Template
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
 
-#define __EXPORT_HELP
 #include "help.h"
+#include "window.h"
 
-bool cg_help::showhelp = false, cg_help::showfps = true, cg_help::wireframe = false, cg_help::koordsystem = true;
-int cg_help::frames = 0;
-float cg_help::fps = 60.0f;
-float cg_help::bg_size = 0.8f, cg_help::shadow = 0.003f;
-const char * cg_help::title = "PrakCG Template";
+const char *column1[] = {
+    "Maus",
+    "linke Taste      Kamerabewegung",
+    "mittlere Taste   Zoom",
+    "rechte Taste     Kontextmen�",
+    "",
+    "",
+    "",
+    "l,L              Licht global (An/Aus)",
+    "t,T              Texturierung (An/Aus)",
+    "b,B              Blending (An/Aus)",
+    "",
+    nullptr
+};
 
-void  cg_help::toggle()
-{
-	showhelp = !showhelp;
-}
-void  cg_help::toggleFps()
-{
-	showfps = !showfps;
-}
-void  cg_help::setTitle(char *t)
-{
-	title = t;
-}
-void  cg_help::setWireframe(bool wf)
-{
-	wireframe = wf;
-}
-bool  cg_help::isWireframe()
-{
-	return wireframe;
-}
-void  cg_help::toggleKoordsystem()
-{
-	koordsystem = !koordsystem;
-}
-bool  cg_help::isKoordsystem()
-{
-	return koordsystem;
-}
-float cg_help::getFps()
-{
-	static time_t lastTime = 0;
-	static time_t startTime = 0;
+const char *column2[] = {
+    "f,F        Framerate (An/Aus)",
+    "h,H,F1     Hilfe (An/Aus)",
+    "w,W        WireFrame (An/Aus)",
+    "k,K        Koordinatensystem (An/Aus)",
+    "ESC        Beenden",
+    nullptr
+};
 
-	time_t now;
-	time(&now);
+bool  Help::_showHelp = false;
+bool  Help::_showFPS = true;
+bool  Help::_coordSystem = true;
+int   Help::_frames = 0;
+float Help::_fps = 60.0f;
+float Help::_shadow = 0.003f;
 
-	if (startTime == 0) { // beim Programmstart
-		startTime = now;
-		lastTime = now;
-	}
-
-	if (now - lastTime >= 1) {
-		//wenn ueber eine Sekunde seit der letzten Messung vergangen ist
-		{
-			fps = ((float)frames) / (float)(now - lastTime);	//fps neu ausrechnen
-			lastTime = now;	//alte Zeit speichern
-			frames = 0;		//frame-zaehler zuruecksetzen
-		}
-	}
-
-	return fps;
+void Help::toggle() {
+    _showHelp = !_showHelp;
 }
 
-double cg_help::getDelta() {
-	cg_help help;
-	double fps = help.getFps();			// Lesen der aktuellen Framerate
-										// bei durchg�ngig gedr�ckter Taste ver�ndert 
-										// sich eine Variable bei der Addition von 
-										// delta um den Wert von 1 pro Sekunde
-	if (fps < 1.0) fps = 1.0;			// vermeiden DIV by Zero
-	return 60.0 / fps;					// delta ist der Normierungsfaktor f�r 60fps
-}
-void cg_help::drawBackground()
-{
-	glFrontFace(GL_CCW);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(0.3f, 0.3f, 0.3f, 0.7f);
-	glBegin(GL_QUADS);
-		glVertex2f(-bg_size, bg_size);
-		glVertex2f(-bg_size, -bg_size);
-		glVertex2f(bg_size, -bg_size);
-		glVertex2f(bg_size, bg_size);
-	glEnd();
-	glDisable(GL_BLEND);
+void Help::toggleFps() {
+    _showFPS = !_showFPS;
 }
 
-/*
-GLUT_BITMAP_8_BY_13
-GLUT_BITMAP_9_BY_15
-GLUT_BITMAP_TIMES_ROMAN_10
-GLUT_BITMAP_TIMES_ROMAN_24
-GLUT_BITMAP_HELVETICA_10
-GLUT_BITMAP_HELVETICA_12
-GLUT_BITMAP_HELVETICA_18
-*/
-void cg_help::printText(float x, float y, const char *text, void *font)
-{
-	glRasterPos2f(x, y);
-	unsigned int l = strlen(text);
-	for (unsigned int i = 0; i < l; ++i)
-		glutBitmapCharacter(font, text[i]);
+void Help::toggleCoordSystem() {
+    _coordSystem = !_coordSystem;
 }
 
-void cg_help::printText(float x, float y, const char *text, float r, float g, float b, void *font)
-{
-	glColor3f(r, g, b);
-	printText(x, y, text, font);
+float Help::getFps() {
+    static time_t lastTime = 0;
+    static time_t startTime = 0;
+
+    time_t now;
+    time(&now);
+
+    if (startTime == 0) {
+        startTime = now;
+        lastTime = now;
+    }
+
+    if (now - lastTime >= 1) {
+        _fps = ((float) _frames) / (float) (now - lastTime);
+        lastTime = now;
+        _frames = 0;
+    }
+
+    return _fps;
 }
 
-void cg_help::printTextShadow(float x, float y, const char *text, float r, float g, float b, void *font)
-{
-	printText(x + shadow, y - shadow, text, 0, 0, 0, font);
-	printText(x, y, text, r, g, b, font);
+double Help::getDelta() {
+    double fps = Help::getFps();
+    if (fps < 1.0) fps = 1.0;
+    return 60.0 / fps;
 }
 
-void cg_help::printFps(float x, float y, void *font)
-{
-	char fpstext[20];
-	sprintf(fpstext, "FPS = %.1f", getFps());
-	printText(x, y, fpstext, font);
+void Help::drawBackground() {
+    glFrontFace(GL_CCW);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(0.3f, 0.3f, 0.3f, 0.7f);
+    glBegin(GL_QUADS);
+    glVertex2f(-0.8f, 0.8f);
+    glVertex2f(-0.8f, -0.8f);
+    glVertex2f(0.8f, -0.8f);
+    glVertex2f(0.8f, 0.8f);
+    glEnd();
+    glDisable(GL_BLEND);
 }
 
-void cg_help::draw()
-{
-
-	++frames;
-	if (!showhelp && !showfps) return;
-
-	GLfloat akt_color[4];
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
-	glGetFloatv(GL_CURRENT_COLOR, akt_color);
-
-	//orthogonale projektion setzen
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	gluOrtho2D(-1.0f, 1.0f, -1.0f, 1.0f);
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
-
-	if (showhelp)
-	{
-		// hintergrund
-		drawBackground();
-		// title
-		printTextShadow(-0.6f, 0.7f, title, 1.0f, 1.0f, 0.0f, GLUT_BITMAP_TIMES_ROMAN_24);
-		// tasten
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		float posy = 0.5f;
-		int i = 0;
-		while (spalte1[i])
-		{
-			printText(-0.6f, posy, spalte1[i], GLUT_BITMAP_9_BY_15);
-			posy -= 0.1f;
-			++i;
-		}
-		posy = 0.5f;
-		i = 0;
-		while (spalte2[i])
-		{
-			printText(0.05f, posy, spalte2[i], GLUT_BITMAP_9_BY_15);
-			posy -= 0.1f;
-			++i;
-		}
-	}
-	// fps
-	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-	printFps(-0.78f, -0.78f);
-
-	// ruecksetzen
-	glEnable(GL_DEPTH_TEST);
-	//reset matrices
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-	glColor4fv(akt_color);
-	glPopAttrib();
+void Help::printText(float x, float y, const char *text, void *font) {
+    glRasterPos2f(x, y);
+    unsigned int l = strlen(text);
+    for (unsigned int i = 0; i < l; ++i)
+        glutBitmapCharacter(font, text[i]);
 }
 
-//
-//	Prozedur fuer Zeichnen eines Koordinatensystemes
-//
-void cg_help::drawKoordsystem(GLfloat xmin, GLfloat xmax, GLfloat ymin, GLfloat ymax,
-	GLfloat zmin, GLfloat zmax)
-{
+void Help::printText(float x, float y, const char *text, float r, float g, float b, void *font) {
+    glColor3f(r, g, b);
+    printText(x, y, text, font);
+}
 
-	if (cg_help::koordsystem)
-	{
+void Help::printTextShadow(float x, float y, const char *text, float r, float g, float b, void *font) {
+    printText(x + _shadow, y - _shadow, text, 0, 0, 0, font);
+    printText(x, y, text, r, g, b, font);
+}
 
-		GLfloat i;
-		GLfloat akt_color[4];
-		GLint akt_mode;
-		GLboolean cull_mode;
+void Help::printFps(float x, float y, void *font) {
+    char fpstext[20];
+    sprintf(fpstext, "FPS = %.1f", getFps());
+    printText(x, y, fpstext, font);
+}
 
-		glGetBooleanv(GL_CULL_FACE, &cull_mode);
-		glDisable(GL_CULL_FACE);
+void Help::draw() {
+    ++_frames;
+    if (!_showHelp && !_showFPS) return;
 
-		GLUquadricObj *spitze = gluNewQuadric();
-		if (!spitze) return; // quadric konnte nicht erzeugt werden
+    GLfloat akt_color[4];
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
+    glGetFloatv(GL_CURRENT_COLOR, akt_color);
 
-		glPushAttrib(GL_ALL_ATTRIB_BITS);
-			glGetFloatv(GL_CURRENT_COLOR, akt_color);
-			glDisable(GL_LIGHTING);
+    //orthogonale projektion setzen
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(-1.0f, 1.0f, -1.0f, 1.0f);
 
-			glBegin(GL_LINES);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
 
-				glColor3f(1.0, 0.0, 0.0);
-				glVertex3f(xmin, 0, 0);
-				glVertex3f(xmax, 0, 0);
-				for (i = xmin; i <= xmax; i++)
-				{
-					glVertex3f(i, -0.15, 0.0);
-					glVertex3f(i, 0.15, 0.0);
-				}
-				glColor3f(0.0, 1.0, 0.0);
-				glVertex3f(0, ymin, 0);
-				glVertex3f(0, ymax, 0);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_LIGHTING);
 
-				for (i = ymin; i <= ymax; i++)
-				{
-					glVertex3f(-0.15, i, 0.0);
-					glVertex3f(0.15, i, 0.0);
-				}
+    if (_showHelp) {
+        // hintergrund
+        drawBackground();
+        // title
+        printTextShadow(-0.6f, 0.7f, TITLE, 1.0f, 1.0f, 0.0f, GLUT_BITMAP_TIMES_ROMAN_24);
+        // tasten
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        float posy = 0.5f;
+        int i = 0;
+        while (column1[i]) {
+            printText(-0.6f, posy, column1[i], GLUT_BITMAP_9_BY_15);
+            posy -= 0.1f;
+            ++i;
+        }
+        posy = 0.5f;
+        i = 0;
+        while (column2[i]) {
+            printText(0.05f, posy, column2[i], GLUT_BITMAP_9_BY_15);
+            posy -= 0.1f;
+            ++i;
+        }
+    }
 
-				glColor3f(0.0, 0.0, 1.0);
-				glVertex3f(0, 0, zmin);
-				glVertex3f(0, 0, zmax);
+    if (_showFPS) {
+        glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+        printFps(-0.78f, -0.78f);
+    }
 
-				for (i = zmin; i <= zmax; i++)
-				{
-					glVertex3f(-0.15, 0.0, i);
-					glVertex3f(0.15, 0.0, i);
-				}
+    glEnable(GL_DEPTH_TEST);
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+    glColor4fv(akt_color);
+    glPopAttrib();
+}
 
-			glEnd();
+void Help::drawCoordSystem(GLfloat xmin, GLfloat xmax, GLfloat ymin, GLfloat ymax,
+                           GLfloat zmin, GLfloat zmax) {
+    if (Help::_coordSystem) { ;
+        GLfloat akt_color[4];
+        GLint akt_mode;
+        GLboolean cull_mode;
 
-			// Ende Linienpaare
-			glGetIntegerv(GL_MATRIX_MODE, &akt_mode);
-			glMatrixMode(GL_MODELVIEW);
+        glGetBooleanv(GL_CULL_FACE, &cull_mode);
+        glDisable(GL_CULL_FACE);
+        glPushAttrib(GL_ALL_ATTRIB_BITS);
+        glGetFloatv(GL_CURRENT_COLOR, akt_color);
+        glDisable(GL_LIGHTING);
+        glGetIntegerv(GL_MATRIX_MODE, &akt_mode);
+        glMatrixMode(GL_MODELVIEW);
 
-			// zuerst die X-Achse
-			glPushMatrix();
-				glTranslatef(xmax, 0., 0.);
-				glRotatef(90., 0., 1., 0.);
-				glColor3f(1.0, 0.0, 0.0);
-				gluCylinder(spitze, 0.5, 0., 1., 10, 10);
-			glPopMatrix();
+        glBegin(GL_LINES);
+        glColor3f(1.0, 0.0, 0.0);
+        glVertex3f(xmin, 0, 0);
+        glVertex3f(xmax, 0, 0);
 
-			// dann die Y-Achse
-			glPushMatrix();
-				glTranslatef(0., ymax, 0.);
-				glRotatef(-90., 1., 0., 0.);
-				glColor3f(0.0, 1.0, 0.0);
-				gluCylinder(spitze, 0.5, 0., 1., 10, 10);
-			glPopMatrix();
+        for (GLfloat i = xmin; i <= xmax; i++) {
+            glVertex3f(i, -0.15, 0.0);
+            glVertex3f(i, 0.15, 0.0);
+        }
 
-			// zum Schluss die Z-Achse
-			glPushMatrix();
-				glTranslatef(0., 0., zmax);
-				// glRotatef(-90., 1., 0., 0.);
-				glColor3f(0.0, 0.0, 1.0);
-				gluCylinder(spitze, 0.5, 0., 1., 10, 10);
-			glPopMatrix();
+        glColor3f(0.0, 1.0, 0.0);
+        glVertex3f(0, ymin, 0);
+        glVertex3f(0, ymax, 0);
 
-			glMatrixMode(akt_mode);
-			glColor4fv(akt_color);
-		glPopAttrib();
-		gluDeleteQuadric(spitze);
+        for (GLfloat i = ymin; i <= ymax; i++) {
+            glVertex3f(-0.15, i, 0.0);
+            glVertex3f(0.15, i, 0.0);
+        }
 
-		if (!cull_mode) glDisable(GL_CULL_FACE);
+        glColor3f(0.0, 0.0, 1.0);
+        glVertex3f(0, 0, zmin);
+        glVertex3f(0, 0, zmax);
 
-	}
+        for (GLfloat i = zmin; i <= zmax; i++) {
+            glVertex3f(-0.15, 0.0, i);
+            glVertex3f(0.15, 0.0, i);
+        }
+        glEnd();
+
+        GLUquadricObj *cone = gluNewQuadric();
+
+        glPushMatrix();
+        glTranslatef(xmax, 0., 0.);
+        glRotatef(90., 0., 1., 0.);
+        glColor3f(1.0, 0.0, 0.0);
+        gluCylinder(cone, 0.5, 0., 1., 10, 10);
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(0., ymax, 0.);
+        glRotatef(-90., 1., 0., 0.);
+        glColor3f(0.0, 1.0, 0.0);
+        gluCylinder(cone, 0.5, 0., 1., 10, 10);
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(0., 0., zmax);
+        glColor3f(0.0, 0.0, 1.0);
+        gluCylinder(cone, 0.5, 0., 1., 10, 10);
+        glPopMatrix();
+
+        gluDeleteQuadric(cone);
+
+        if (!cull_mode) glDisable(GL_CULL_FACE);
+        glMatrixMode(akt_mode);
+        glColor4fv(akt_color);
+        glPopAttrib();
+    }
 }

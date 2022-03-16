@@ -13,7 +13,7 @@ add_executable(Main
     image.cpp
     input.cpp
     light.cpp
-    wavefront.cpp
+    object.cpp
     window.cpp
     assets.cpp
     planet.cpp

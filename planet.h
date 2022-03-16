@@ -3,12 +3,12 @@
 #include <vector>
 
 #include "Include/lib.h"
-#include "wavefront.h"
+#include "object.h"
 
 
 class Planet {
 public:
-    Planet(float radius, float mass, vec3 position, vec3 velocity, vector<Planet> planets, cg_object3D &model);
+    Planet(float radius, float mass, vec3 position, vec3 velocity, vector<Planet> planets, Object &model);
 
     void updateVel(float deltaTime);
 
@@ -26,6 +26,6 @@ private:
     vec3 position;
     vec3 velocity;
     std::vector<Planet> planets;
-    cg_object3D model;
+    Object model;
 };
 

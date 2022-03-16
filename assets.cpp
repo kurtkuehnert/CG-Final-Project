@@ -1,7 +1,7 @@
 #include "assets.h"
 
 Image textures[NUM_TEXTURES];
-cg_object3D objects[NUM_OBJECTS];
+Object objects[NUM_OBJECTS];
 
 const char *texture_files[NUM_TEXTURES] = {
     "container.bmp",

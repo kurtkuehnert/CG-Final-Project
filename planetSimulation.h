@@ -10,9 +10,9 @@ static const float G = 0.0000000000674f;
 class PlanetSimulation {
 public:
 
-    explicit PlanetSimulation(cg_object3D *objects);
+    explicit PlanetSimulation(Object *objects);
 
-    PlanetSimulation(int ammountSolarSystems, float averageAmmountPlanets, cg_object3D *objects);
+    PlanetSimulation(int ammountSolarSystems, float averageAmmountPlanets, Object *objects);
 
     void render();
 

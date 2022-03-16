@@ -15,12 +15,12 @@ void setCamera() {
     double x, y, z, The, Phi;
     static double radius = 10;
 
-    if (cg_mouse::buttonState(GLUT_LEFT_BUTTON)) {
-        GlobalState::cameraHelper[0] += cg_mouse::moveX();
-        GlobalState::cameraHelper[1] += cg_mouse::moveY();
+    if (Mouse::buttonState(GLUT_LEFT_BUTTON)) {
+        GlobalState::cameraHelper[0] += Mouse::moveX();
+        GlobalState::cameraHelper[1] += Mouse::moveY();
     }
-    if (cg_mouse::buttonState(GLUT_MIDDLE_BUTTON)) {
-        radius += 0.1 * cg_mouse::moveY();
+    if (Mouse::buttonState(GLUT_MIDDLE_BUTTON)) {
+        radius += 0.1 * Mouse::moveY();
         if (radius < 1.0) radius = 1.0;
     }
 
@@ -40,29 +40,30 @@ void drawScene() {
     glEnable(GL_TEXTURE_2D);
     textures[SPACESHIP_RED].bind();
     objects[SPACESHIP].draw();
+    glDisable(GL_TEXTURE_2D);
     planetSimulation->render();
 }
 
 void displayFunc() {
-    if (cg_key::keyState(27)) {
-        exit(0); // Escape -> Programm beenden
-    } else if (1 == cg_key::keyState('f') || 1 == cg_key::keyState('F')) {
-        cg_help::toggleFps();    // Framecounter on/off
-    } else if (1 == cg_key::keyState('h') || 1 == cg_key::keyState('H') || 1 == cg_key::specialKeyState(GLUT_KEY_F1)) {
-        cg_help::toggle();    // Hilfetext on/off
-    } else if (1 == cg_key::keyState('k') || 1 == cg_key::keyState('K')) {
-        cg_help::toggleKoordsystem();    // Koordinatensystem on/off
-    } else if (1 == cg_key::keyState('w') || 1 == cg_key::keyState('W')) {
-        GlobalState::drawMode = (GlobalState::drawMode == GL_FILL) ? GL_LINE : GL_FILL; // Wireframe on/off
-    } else if (1 == cg_key::keyState('l') || 1 == cg_key::keyState('L')) {
-        GlobalState::lightMode = !GlobalState::lightMode;    // Beleuchtung on/off
-    } else if (1 == cg_key::keyState('i') || 1 == cg_key::keyState('I')) {
-        GlobalState::cameraHelper[0] = 0;    // Initialisierung der Kamera
+    if (Key::keyState(27)) {
+        exit(0);
+    } else if (1 == Key::keyState('f') || 1 == Key::keyState('F')) {
+        Help::toggleFps();
+    } else if (1 == Key::keyState('h') || 1 == Key::keyState('H') || 1 == Key::specialKeyState(GLUT_KEY_F1)) {
+        Help::toggle();
+    } else if (1 == Key::keyState('k') || 1 == Key::keyState('K')) {
+        Help::toggleCoordSystem();
+    } else if (1 == Key::keyState('w') || 1 == Key::keyState('W')) {
+        GlobalState::drawMode = (GlobalState::drawMode == GL_FILL) ? GL_LINE : GL_FILL;
+    } else if (1 == Key::keyState('l') || 1 == Key::keyState('L')) {
+        GlobalState::lightMode = !GlobalState::lightMode;
+    } else if (1 == Key::keyState('i') || 1 == Key::keyState('I')) {
+        GlobalState::cameraHelper[0] = 0;
         GlobalState::cameraHelper[1] = 0;
-    } else if (1 == cg_key::keyState('t') || 1 == cg_key::keyState('T')) {
-        GlobalState::textureMode = !GlobalState::textureMode; // Texturierung on/off
-    } else if (1 == cg_key::keyState('b') || 1 == cg_key::keyState('B')) {
-        GlobalState::blendMode = !GlobalState::blendMode; // Blending on/off
+    } else if (1 == Key::keyState('t') || 1 == Key::keyState('T')) {
+        GlobalState::textureMode = !GlobalState::textureMode;
+    } else if (1 == Key::keyState('b') || 1 == Key::keyState('B')) {
+        GlobalState::blendMode = !GlobalState::blendMode;
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -72,9 +73,6 @@ void displayFunc() {
     setCamera();
 
     glPolygonMode(GL_FRONT_AND_BACK, GlobalState::drawMode);
-    glFrontFace(GL_CCW);
-    glCullFace(GL_BACK);
-
     if (GlobalState::cullMode) glEnable(GL_CULL_FACE);
     else glDisable(GL_CULL_FACE);
 
@@ -92,22 +90,18 @@ void displayFunc() {
         setLights();
         glEnable(GL_LIGHTING);
     } else {
-        glDisable(GL_LIGHTING);
         glColor4f(0.2, 0.2, 0.6, 1.0);
+        glDisable(GL_LIGHTING);
     }
 
     glEnable(GL_NORMALIZE);
 
-    cg_help::drawKoordsystem(-8, 10, -8, 10, -8, 10);
+    Help::drawCoordSystem(-8, 10, -8, 10, -8, 10);
     drawScene();
-    cg_help::draw();
+    Help::draw();
 
-    // Wireframe deaktivieren
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDisable(GL_CULL_FACE);
-
-    glFlush();                // Daten an Server (fuer die Darstellung) schicken
-    glutSwapBuffers();        // Buffers wechseln
+    glFlush();
+    glutSwapBuffers();
 }
 
 int main(int argc, char **argv) {

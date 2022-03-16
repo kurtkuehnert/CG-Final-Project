@@ -2,7 +2,7 @@
 
 #include "Include/lib.h"
 
-#define PROGRAM_NAME  "Solar System"
+#define TITLE  "Solar System"
 #define WIN_POS_X                 0
 #define WIN_POS_Y                 0
 #define WIN_WIDTH              1280
@@ -57,5 +57,4 @@ struct GlobalState {
     static bool blendMode;
     static int cameraHelper[2];
     static float cameraPos[2];
-    static int useVBOs;
 };

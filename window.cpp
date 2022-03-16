@@ -10,14 +10,13 @@ int GlobalState::normalMode = 2;
 bool GlobalState::cullMode = false;
 int GlobalState::cameraHelper[] = {0};
 float GlobalState::cameraPos[] = {0, 0};
-int GlobalState::useVBOs = 0;
 
 void init(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
     glutInitWindowPosition(WIN_POS_X, WIN_POS_Y);
     glutInitDisplayMode(DISPLAY_MODE);
-    glutCreateWindow(PROGRAM_NAME);
+    glutCreateWindow(TITLE);
     glewInit();
 
     glEnable(GL_DEPTH_TEST);    // Z-Buffer aktivieren

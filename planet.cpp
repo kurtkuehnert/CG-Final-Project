@@ -3,7 +3,7 @@
 #include "planetSimulation.h"
 
 Planet::Planet(float radius, float mass, vec3 position, vec3 velocity, std::vector<Planet> planets,
-               cg_object3D &model) {
+               Object &model) {
     this->radius = radius;
     this->mass = mass;
     this->position = position;
