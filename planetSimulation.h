@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Include/gl.h"
-#include "vector.h"
+#include "Include/lib.h"
 #include "planet.h"
 #include "assets.h"
 #include <vector>

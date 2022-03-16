@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <cmath>
 
-#include "Include/gl.h"
+#include "Include/lib.h"
 #include "help.h"
 #include "window.h"
 #include "input.h"

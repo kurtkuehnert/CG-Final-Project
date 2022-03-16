@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Include/gl.h"
+#include "Include/lib.h"
 
 class Image {
 public:

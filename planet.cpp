@@ -2,7 +2,7 @@
 #include "planet.h"
 #include "planetSimulation.h"
 
-Planet::Planet(float radius, float mass, CVector position, CVector velocity, std::vector<Planet> planets,
+Planet::Planet(float radius, float mass, vec3 position, vec3 velocity, std::vector<Planet> planets,
                cg_object3D &model) {
     this->radius = radius;
     this->mass = mass;
@@ -14,11 +14,11 @@ Planet::Planet(float radius, float mass, CVector position, CVector velocity, std
 
 void Planet::updatePos(float deltaTime) {
     // Beschleunigung berechnen
-    CVector accel = CVector(0, 0, 0);
+    vec3 accel = vec3(0, 0, 0);
     for (Planet pla: planets) {
-        CVector dir = pla.getPos() - position;
-        float dist2 = pow(dir.len(), 2);
-        dir.normalize();
+        vec3 dir = pla.getPos() - position;
+        float dist2 = pow(length(dir), 2);
+        normalize(dir);
         accel = accel + (dir * G * (pla.getMass() / dist2));
     }
 
@@ -32,7 +32,7 @@ void Planet::updateVel(float deltaTime) {
 
 void Planet::render() {
     glPushMatrix();
-    glTranslatef(position.x(), position.y(), position.z());
+    glTranslatef(position.x, position.y, position.z);
     model.draw();
     glPopMatrix();
 }
@@ -41,6 +41,6 @@ float Planet::getMass() {
     return mass;
 }
 
-CVector Planet::getPos() {
+vec3 Planet::getPos() {
     return position;
 }

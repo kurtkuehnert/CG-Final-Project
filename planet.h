@@ -2,15 +2,13 @@
 
 #include <vector>
 
-#include "Include/gl.h"
-#include "vector.h"
+#include "Include/lib.h"
 #include "wavefront.h"
 
 
 class Planet {
 public:
-    Planet(float radius, float mass, CVector position, CVector velocity, std::vector<Planet> planets,
-           cg_object3D &model);
+    Planet(float radius, float mass, vec3 position, vec3 velocity, vector<Planet> planets, cg_object3D &model);
 
     void updateVel(float deltaTime);
 
@@ -20,13 +18,13 @@ public:
 
     float getMass();
 
-    CVector getPos();
+    vec3 getPos();
 
 private:
     float radius;
     float mass;
-    CVector position;
-    CVector velocity;
+    vec3 position;
+    vec3 velocity;
     std::vector<Planet> planets;
     cg_object3D model;
 };

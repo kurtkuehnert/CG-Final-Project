@@ -1,29 +1,24 @@
 #pragma once
 
-#include "Include/gl.h"
+#include "Include/lib.h"
 
-#define PROG_NAME    "Solar System"
+#define PROGRAM_NAME  "Solar System"
+#define WIN_POS_X                 0
+#define WIN_POS_Y                 0
+#define WIN_WIDTH              1280
+#define WIN_HEIGHT              800
+#define FOV                      60
+#define NEAR                      1
+#define FAR                    1000
 
-#define WIN_POS_X    0
-#define WIN_POS_Y    0
-
-#define WIN_WIDTH    1280
-#define WIN_HEIGHT    800
-
-
-/////////////////////////////////////////////////////////////////////////////////
-//	OpenGL Darstellungsmodus
-/////////////////////////////////////////////////////////////////////////////////
-//! Default OpenGL Modus:  RGBA mit double Buffering und depth buffer (Z-Buffer)
-//! Verwendung der Stencil und Accumulation Buffers, falls erforderlich
 #if defined NEED_STENCIL && defined NEED_ACCUM
-#define USED_MODUS	GLUT_RGBA |  GLUT_DEPTH | GLUT_DOUBLE | GLUT_STENCIL | GLUT_ACCUM
+#define DISPLAY_MODE	GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_STENCIL | GLUT_ACCUM
 #elif defined NEED_STENCIL
-#define USED_MODUS	GLUT_RGBA |  GLUT_DEPTH | GLUT_DOUBLE | GLUT_STENCIL
+#define DISPLAY_MODE	GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_STENCIL
 #elif defined NEED_ACCUM
-#define USED_MODUS	GLUT_RGBA |  GLUT_DEPTH | GLUT_DOUBLE | GLUT_ACCUM
+#define DISPLAY_MODE	GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_ACCUM
 #else
-#define USED_MODUS    GLUT_RGBA |  GLUT_DEPTH | GLUT_DOUBLE
+#define DISPLAY_MODE    GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE
 #endif
 
 #define MENU_TEXT_WIREFRAME                "Wireframe on/off"
@@ -33,8 +28,8 @@
 #define MENU_TEXT_PER_VERTEX_NORMALS       "Lighting: set normals per vertex"
 #define MENU_TEXT_EXIT                     "Exit"
 
-enum MENU_IDs {
-    ID_MENU_WIREFRAME = 1,
+enum {
+    ID_MENU_WIREFRAME,
     ID_MENU_SHADE,
     ID_MENU_NO_NORMALS,
     ID_MENU_PER_SURFACE_NORMALS,
@@ -54,7 +49,7 @@ void init(int argc, char **argv);
 
 struct GlobalState {
     static double screenSize[2];
-    static GLenum drawMode;            // {GL_LINE || GL_FILL}
+    static GLenum drawMode;
     static bool lightMode;
     static int normalMode;
     static bool cullMode;
