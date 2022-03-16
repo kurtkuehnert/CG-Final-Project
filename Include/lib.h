@@ -1,7 +1,7 @@
 #if defined(_WIN32) && defined(__APPLE__)
 
-#include "glew/glew.h"
-#include "glut/freeglut.h"
+#include "glew.h"
+#include "freeglut.h"
 #include "glm/glm.hpp"
 
 #elif defined(__linux__)
