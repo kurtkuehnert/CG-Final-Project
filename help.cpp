@@ -70,11 +70,11 @@ float cg_help::getFps()
 double cg_help::getDelta() {
 	cg_help help;
 	double fps = help.getFps();			// Lesen der aktuellen Framerate
-										// bei durchgängig gedrückter Taste verändert 
+										// bei durchgï¿½ngig gedrï¿½ckter Taste verï¿½ndert 
 										// sich eine Variable bei der Addition von 
 										// delta um den Wert von 1 pro Sekunde
 	if (fps < 1.0) fps = 1.0;			// vermeiden DIV by Zero
-	return 60.0 / fps;					// delta ist der Normierungsfaktor für 60fps
+	return 60.0 / fps;					// delta ist der Normierungsfaktor fï¿½r 60fps
 }
 void cg_help::drawBackground()
 {
@@ -197,7 +197,7 @@ void cg_help::drawKoordsystem(GLfloat xmin, GLfloat xmax, GLfloat ymin, GLfloat 
 	GLfloat zmin, GLfloat zmax)
 {
 
-	if (this->koordsystem)
+	if (cg_help::koordsystem)
 	{
 
 		GLfloat i;

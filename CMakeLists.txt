@@ -17,6 +17,8 @@ add_executable(Main
     vector.cpp
     wavefront.cpp
     window.cpp
-    Main.cpp
-    )
+    assets.cpp
+    planet.cpp
+    planetSimulation.cpp
+    Main.cpp)
 target_link_libraries(Main ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES})
