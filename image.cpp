@@ -53,7 +53,7 @@ cg_image::~cg_image ()
 bool cg_image::load ( const char * fileName, bool generateMipmaps )
 {
 	// Datei in Zwischenspeicher lesen
-	if ( !loadBMP ( fileName, false ) )
+	if ( !loadBMP ( fileName, true ) )
 		if ( !loadTGA ( fileName, false ) )
 			if ( !loadRGB ( fileName, false ) )
 			{

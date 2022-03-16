@@ -117,12 +117,16 @@
     <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="light.cpp" />
-    <ClCompile Include="Template_PrakCG.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="planet.cpp" />
+    <ClCompile Include="planetSimulation.cpp" />
     <ClCompile Include="vector.cpp" />
     <ClCompile Include="wavefront.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="planet.h" />
+    <ClInclude Include="planetSimulation.h" />
     <ClInclude Include="help.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="input.h" />

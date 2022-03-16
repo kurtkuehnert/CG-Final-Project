@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Template_PrakCG.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="help.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -37,6 +34,15 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="vector.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="planetSimulation.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="planet.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -60,6 +66,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="vector.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="planetSimulation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="planet.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

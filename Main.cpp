@@ -24,6 +24,8 @@
 #include "wavefront.h"
 #include "image.h"
 #include "vector.h"
+#include "planetSimulation.h"
+#include "main.h"
 #pragma endregion
 
 void setCamera();		// Kamera platzieren, siehe Maus-Callbacks
@@ -222,22 +224,8 @@ const char* objects_paths[num_objects] = { "chrome.obj", "top.obj", "glass.obj",
 											"axis.obj", "trailer.obj", "cargo_t.obj", "ground_concrete.obj", "ground_street.obj" };
 
 cg_object3D objects[num_objects];
-// Objektbezeichner f�r den Zugriff auf die Wavefront Objekte
-enum {
-	TRUCK_CHROME = 0,
-	TRUCK_TOP,
-	TRUCK_GLASS,
-	WHEEL_SINGLE,
-	WHEEL_DOUBLE,
-	WHEEL_SCREWS,
-	AXIS,
 
-	TRAILER_CHASSIS,
-	TRAILER_CARGO,
-
-	GROUND_OBJ1,
-	GROUND_OBJ2
-};
+PlanetSimulation planetSimulation = PlanetSimulation(objects);
 
 void loadObjects()
 {
@@ -401,6 +389,10 @@ public:
 
 	// Trailer zeichnen
 	void draw(void) {
+		glEnable(GL_TEXTURE_2D);
+		_texture->setEnvMode(GL_REPLACE);
+		_texture->bind();
+
 		glPushMatrix();
 			// pos[], rot
 			glTranslatef(_pos.x(), 0.5, _pos.z());
@@ -592,6 +584,8 @@ void drawScene()
 				break;
 		}
 	}
+
+	planetSimulation.render();
 
 	// Texturierung und Blending global deaktivieren
 	glDisable(GL_TEXTURE_2D);
