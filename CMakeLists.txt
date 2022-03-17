@@ -9,13 +9,13 @@ find_package(GLEW REQUIRED)
 find_package(glm REQUIRED)
 
 add_executable(Main
-    help.cpp
-    image.cpp
-    input.cpp
-    light.cpp
-    object.cpp
-    window.cpp
-    assets.cpp
-    main.cpp)
+    src/main.cpp
+    src/help.cpp
+    src/texture.cpp
+    src/input.cpp
+    src/light.cpp
+    src/window.cpp
+    src/assets.cpp
+    src/object.cpp)
 
 target_link_libraries(Main ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES} ${GLM_LIBRARIES})
