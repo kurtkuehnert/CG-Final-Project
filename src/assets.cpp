@@ -1,27 +1,25 @@
 #include "assets.h"
 
-Texture textures[NUM_TEXTURES];
-Object objects[NUM_OBJECTS];
+map<string, Texture> textures;
+map<string, Object> objects;
 
-const char *texture_files[NUM_TEXTURES] = {
-    "spaceship_red.png"
+const string texture_files[] = {
+    "car.png",
 };
 
-const string objects_files[NUM_OBJECTS] = {
-    // "spaceship.obj",
+const string object_files[] = {
     "car.obj",
-    // "house.obj"
 };
 
 
 void loadTextures() {
-    for (int i = 0; i < NUM_TEXTURES; i++) {
-        textures[i].load(TEXTURE_PATH + texture_files[i]);
+    for (const auto &texture_file: texture_files) {
+        textures[texture_file].load(TEXTURE_PATH + texture_file);
     }
 }
 
 void loadObjects() {
-    for (int i = 0; i < NUM_OBJECTS; i++) {
-        objects[i].load(OBJECT_PATH + objects_files[i]);
+    for (const auto &object_file: object_files) {
+        objects[object_file].load(OBJECT_PATH + object_file);
     }
 }

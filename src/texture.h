@@ -13,10 +13,10 @@ public:
 
     void free();
 
-    GLint _minFilter = GL_NEAREST;
-    GLint _magFilter = GL_NEAREST;
+    GLint _minFilter = GL_LINEAR;
+    GLint _magFilter = GL_LINEAR;
     GLint _wrapMode = GL_REPEAT;
-    GLint _envMode = GL_REPLACE;
+    GLint _envMode = GL_MODULATE;
 
 private:
     GLuint _texture = 0;

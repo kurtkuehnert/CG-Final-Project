@@ -27,7 +27,6 @@ private:
     static bool _coordSystem;
     static int _frames;
     static float _fps;
-    static float _shadow;
 
     static void drawBackground();
 
@@ -35,9 +34,6 @@ private:
 
     static void
     printText(float x, float y, const char *text, float r, float g, float b, void *font = GLUT_BITMAP_HELVETICA_18);
-
-    static void printTextShadow(float x, float y, const char *text, float r, float g, float b,
-                                void *font = GLUT_BITMAP_HELVETICA_18);
 
     static void printFps(float x, float y, void *font = GLUT_BITMAP_HELVETICA_18);
 };

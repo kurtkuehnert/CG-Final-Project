@@ -2,12 +2,11 @@
 #include "input.h"
 
 double GlobalState::screenSize[] = {0};
-GLenum GlobalState::drawMode = GL_FILL;
-bool GlobalState::lightMode = true;
-bool GlobalState::textureMode = true;
-bool GlobalState::blendMode = true;
-int GlobalState::normalMode = 2;
-bool GlobalState::cullMode = false;
+bool GlobalState::wireframe = false;
+bool GlobalState::lighting = true;
+bool GlobalState::culling = false;
+bool GlobalState::texturing = true;
+bool GlobalState::blending = true;
 int GlobalState::cameraHelper[] = {0};
 float GlobalState::cameraPos[] = {0, 0};
 
@@ -19,15 +18,15 @@ void init(int argc, char **argv) {
     glutCreateWindow(TITLE);
     glewInit();
 
-    glEnable(GL_DEPTH_TEST);    // Z-Buffer aktivieren
+    glEnable(GL_DEPTH_TEST);
 
     glutCreateMenu(menuFunc);
-    glutAddMenuEntry(MENU_TEXT_WIREFRAME, ID_MENU_WIREFRAME);
-    glutAddMenuEntry(MENU_TEXT_SHADE, ID_MENU_SHADE);
-    glutAddMenuEntry(MENU_TEXT_NO_NORMALS, ID_MENU_NO_NORMALS);
-    glutAddMenuEntry(MENU_TEXT_PER_SURFACE_NORMALS, ID_MENU_PER_SURFACE_NORMALS);
-    glutAddMenuEntry(MENU_TEXT_PER_VERTEX_NORMALS, ID_MENU_PER_VERTEX_NORMALS);
-    glutAddMenuEntry(MENU_TEXT_EXIT, ID_MENU_EXIT);
+    glutAddMenuEntry(MENU_TEXT_WIREFRAME, MENU_WIREFRAME);
+    glutAddMenuEntry(MENU_TEXT_LIGHTING, MENU_LIGHTING);
+    glutAddMenuEntry(MENU_TEXT_CULLING, MENU_CULLING);
+    glutAddMenuEntry(MENU_TEXT_TEXTURING, MENU_TEXTURING);
+    glutAddMenuEntry(MENU_TEXT_BLENDING, MENU_BLENDING);
+    glutAddMenuEntry(MENU_TEXT_EXIT, MENU_EXIT);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 
     glutDisplayFunc(displayFunc);
@@ -58,28 +57,22 @@ void reshapeFunc(int width, int height) {
 
 void menuFunc(int Item) {
     switch (Item) {
-        case ID_MENU_EXIT:
+        case MENU_EXIT:
             exit(0);
-        case ID_MENU_WIREFRAME:
-            if (GlobalState::drawMode == GL_FILL)
-                GlobalState::drawMode = GL_LINE;
-            else
-                GlobalState::drawMode = GL_FILL;
+        case MENU_WIREFRAME:
+            GlobalState::wireframe = !GlobalState::wireframe;
             break;
-        case ID_MENU_SHADE:
-            if (GlobalState::lightMode == GL_TRUE)
-                GlobalState::lightMode = GL_FALSE;
-            else
-                GlobalState::lightMode = GL_TRUE;
+        case MENU_LIGHTING:
+            GlobalState::lighting = !GlobalState::lighting;
             break;
-        case ID_MENU_NO_NORMALS:
-            GlobalState::normalMode = 0;
+        case MENU_CULLING:
+            GlobalState::culling = !GlobalState::culling;
             break;
-        case ID_MENU_PER_SURFACE_NORMALS:
-            GlobalState::normalMode = 1;
+        case MENU_TEXTURING:
+            GlobalState::texturing = !GlobalState::texturing;
             break;
-        case ID_MENU_PER_VERTEX_NORMALS:
-            GlobalState::normalMode = 2;
+        case MENU_BLENDING:
+            GlobalState::blending = !GlobalState::blending;
             break;
         default:
             break;

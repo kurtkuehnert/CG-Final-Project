@@ -2,14 +2,14 @@
 
 #include "../Include/lib.h"
 
-#define TITLE  "Solar System"
+#define TITLE  "CG-Final-Project Kurt Kuehnert"
 #define WIN_POS_X                 0
 #define WIN_POS_Y                 0
 #define WIN_WIDTH              1280
 #define WIN_HEIGHT              800
-#define FOV                      60
-#define NEAR                      1
-#define FAR                    1000
+#define FOV                    60.0
+#define NEAR                    1.0
+#define FAR                  1000.0
 
 #if defined NEED_STENCIL && defined NEED_ACCUM
 #define DISPLAY_MODE	GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_STENCIL | GLUT_ACCUM
@@ -21,20 +21,20 @@
 #define DISPLAY_MODE    GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE
 #endif
 
-#define MENU_TEXT_WIREFRAME                "Wireframe on/off"
-#define MENU_TEXT_SHADE                    "Lighting/Shading"
-#define MENU_TEXT_NO_NORMALS               "Lighting: set No Normals"
-#define MENU_TEXT_PER_SURFACE_NORMALS      "Lighting: set normals per surface"
-#define MENU_TEXT_PER_VERTEX_NORMALS       "Lighting: set normals per vertex"
-#define MENU_TEXT_EXIT                     "Exit"
+#define MENU_TEXT_WIREFRAME   "Toggle Wireframe on/off"
+#define MENU_TEXT_LIGHTING    "Toggle Lighting on/off"
+#define MENU_TEXT_CULLING     "Toggle Culling on/off"
+#define MENU_TEXT_TEXTURING   "Toggle Texturing on/off"
+#define MENU_TEXT_BLENDING    "Toggle Blending on/off"
+#define MENU_TEXT_EXIT        "Exit"
 
 enum {
-    ID_MENU_WIREFRAME,
-    ID_MENU_SHADE,
-    ID_MENU_NO_NORMALS,
-    ID_MENU_PER_SURFACE_NORMALS,
-    ID_MENU_PER_VERTEX_NORMALS,
-    ID_MENU_EXIT
+    MENU_WIREFRAME,
+    MENU_LIGHTING,
+    MENU_CULLING,
+    MENU_TEXTURING,
+    MENU_BLENDING,
+    MENU_EXIT
 };
 
 void idleFunc();
@@ -49,12 +49,11 @@ void init(int argc, char **argv);
 
 struct GlobalState {
     static double screenSize[2];
-    static GLenum drawMode;
-    static bool lightMode;
-    static int normalMode;
-    static bool cullMode;
-    static bool textureMode;
-    static bool blendMode;
+    static bool wireframe;
+    static bool lighting;
+    static bool culling;
+    static bool texturing;
+    static bool blending;
     static int cameraHelper[2];
     static float cameraPos[2];
 };

@@ -7,6 +7,44 @@
 #include "input.h"
 #include "light.h"
 #include "assets.h"
+#include "car.h"
+
+Car car;
+
+void drawScene() {
+    glPolygonMode(GL_FRONT_AND_BACK, GlobalState::wireframe ? GL_LINE : GL_FILL);
+
+    if (GlobalState::culling) {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    } else glDisable(GL_CULL_FACE);
+
+    if (GlobalState::lighting) {
+        float m_amb[4] = {0.2, 0.2, 0.2, 1.0};
+        float m_diff[4] = {0.2, 0.2, 0.6, 1.0};
+        float m_spec[4] = {0.8, 0.8, 0.8, 1.0};
+        float m_shine = 32.0;
+        float m_emiss[4] = {0.0, 0.0, 0.0, 1.0};
+
+        setMaterial(GL_FRONT_AND_BACK, m_amb, m_diff, m_spec, m_shine, m_emiss);
+        setLights();
+        glEnable(GL_LIGHTING);
+    } else {
+        glDisable(GL_LIGHTING);
+    }
+
+    int acceleration = 0;
+    int steering = 0;
+
+    if (Key::specialKeyState(GLUT_KEY_UP)) acceleration++;
+    if (Key::specialKeyState(GLUT_KEY_DOWN)) acceleration--;
+
+    if (Key::specialKeyState(GLUT_KEY_LEFT)) steering++;
+    if (Key::specialKeyState(GLUT_KEY_RIGHT)) steering--;
+
+    car.update(static_cast<float>(acceleration), static_cast<float>(steering));
+    car.draw();
+}
 
 void setCamera() {
     double x, y, z, The, Phi;
@@ -33,36 +71,37 @@ void setCamera() {
     gluLookAt(x, y, z, 0, 0, 0, 0, Oben, 0);
 }
 
-void drawScene() {
-    glEnable(GL_TEXTURE_2D);
-    textures[SPACESHIP_RED].bind();
-    objects[SPACESHIP].draw();
-    glDisable(GL_TEXTURE_2D);
-
-    //objects[CAR].draw();
-    //objects[HOUSE].draw();
-}
-
 void displayFunc() {
     if (Key::keyState(27)) {
         exit(0);
-    } else if (1 == Key::keyState('f') || 1 == Key::keyState('F')) {
+    }
+    if (1 == Key::keyState('f') || 1 == Key::keyState('F')) {
         Help::toggleFps();
-    } else if (1 == Key::keyState('h') || 1 == Key::keyState('H') || 1 == Key::specialKeyState(GLUT_KEY_F1)) {
+    }
+    if (1 == Key::keyState('h') || 1 == Key::keyState('H')) {
         Help::toggle();
-    } else if (1 == Key::keyState('k') || 1 == Key::keyState('K')) {
+    }
+    if (1 == Key::keyState('k') || 1 == Key::keyState('K')) {
         Help::toggleCoordSystem();
-    } else if (1 == Key::keyState('w') || 1 == Key::keyState('W')) {
-        GlobalState::drawMode = (GlobalState::drawMode == GL_FILL) ? GL_LINE : GL_FILL;
-    } else if (1 == Key::keyState('l') || 1 == Key::keyState('L')) {
-        GlobalState::lightMode = !GlobalState::lightMode;
-    } else if (1 == Key::keyState('i') || 1 == Key::keyState('I')) {
+    }
+    if (1 == Key::keyState('w') || 1 == Key::keyState('W')) {
+        GlobalState::wireframe = !GlobalState::wireframe;
+    }
+    if (1 == Key::keyState('l') || 1 == Key::keyState('L')) {
+        GlobalState::lighting = !GlobalState::lighting;
+    }
+    if (1 == Key::keyState('c') || 1 == Key::keyState('C')) {
+        GlobalState::culling = !GlobalState::culling;
+    }
+    if (1 == Key::keyState('t') || 1 == Key::keyState('T')) {
+        GlobalState::texturing = !GlobalState::texturing;
+    }
+    if (1 == Key::keyState('b') || 1 == Key::keyState('B')) {
+        GlobalState::blending = !GlobalState::blending;
+    }
+    if (1 == Key::keyState('i') || 1 == Key::keyState('I')) {
         GlobalState::cameraHelper[0] = 0;
         GlobalState::cameraHelper[1] = 0;
-    } else if (1 == Key::keyState('t') || 1 == Key::keyState('T')) {
-        GlobalState::textureMode = !GlobalState::textureMode;
-    } else if (1 == Key::keyState('b') || 1 == Key::keyState('B')) {
-        GlobalState::blendMode = !GlobalState::blendMode;
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -71,31 +110,9 @@ void displayFunc() {
 
     setCamera();
 
-    glPolygonMode(GL_FRONT_AND_BACK, GlobalState::drawMode);
-    if (GlobalState::cullMode) glEnable(GL_CULL_FACE);
-    else glDisable(GL_CULL_FACE);
-
-    glEnable(GL_COLOR_MATERIAL);
-    glColorMaterial(GL_FRONT, GL_DIFFUSE);
-
-    if (GlobalState::lightMode) {
-        float m_amb[4] = {0.2, 0.2, 0.2, 1.0};
-        float m_diff[4] = {0.2, 0.2, 0.6, 1.0};
-        float m_spec[4] = {0.8, 0.8, 0.8, 1.0};
-        float m_shine = 32.0;
-        float m_emiss[4] = {0.0, 0.0, 0.0, 1.0};
-
-        setMaterial(GL_FRONT_AND_BACK, m_amb, m_diff, m_spec, m_shine, m_emiss);
-        setLights();
-        glEnable(GL_LIGHTING);
-    } else {
-        glColor4f(0.2, 0.2, 0.6, 1.0);
-        glDisable(GL_LIGHTING);
-    }
-
-    glEnable(GL_NORMALIZE);
-
     Help::drawCoordSystem(-8, 10, -8, 10, -8, 10);
+
+
     drawScene();
     Help::draw();
 
@@ -108,6 +125,8 @@ int main(int argc, char **argv) {
 
     loadObjects();
     loadTextures();
+
+    car = Car(&objects["car.obj"]);
 
     glutMainLoop();
 

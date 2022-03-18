@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(Solar-System)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
@@ -16,6 +16,7 @@ add_executable(Main
     src/light.cpp
     src/window.cpp
     src/assets.cpp
+    src/car.cpp
     src/object.cpp)
 
 target_link_libraries(Main ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES} ${GLM_LIBRARIES})

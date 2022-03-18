@@ -6,35 +6,32 @@
 #include "window.h"
 
 const char *column1[] = {
-    "Maus",
-    "linke Taste      Kamerabewegung",
-    "mittlere Taste   Zoom",
-    "rechte Taste     Kontextmen�",
-    "",
-    "",
-    "",
-    "l,L              Licht global (An/Aus)",
-    "t,T              Texturierung (An/Aus)",
-    "b,B              Blending (An/Aus)",
-    "",
+    "Mouse",
+    "left button      Camera Controls",
+    "middle button    Zoom",
+    "right button     Context Menu",
     nullptr
 };
 
 const char *column2[] = {
-    "f,F        Framerate (An/Aus)",
-    "h,H,F1     Hilfe (An/Aus)",
-    "w,W        WireFrame (An/Aus)",
-    "k,K        Koordinatensystem (An/Aus)",
-    "ESC        Beenden",
+    "Keyboard",
+    "f,F        Toggle Frame Rate on/off",
+    "h,H        Toggle Help on/off",
+    "w,W        Toggle Wireframe on/off",
+    "l,L        Toggle Lighting on/off",
+    "c,C        Toggle Culling on/off",
+    "t,T        Toggle Texturing on/off",
+    "b,B        Toggle Blending on/off",
+    "k,K        Toggle Coordinate System on/off",
+    "ESC        Exit",
     nullptr
 };
 
 bool  Help::_showHelp = false;
-bool  Help::_showFPS = true;
+bool  Help::_showFPS = false;
 bool  Help::_coordSystem = true;
 int   Help::_frames = 0;
 float Help::_fps = 60.0f;
-float Help::_shadow = 0.003f;
 
 void Help::toggle() {
     _showHelp = !_showHelp;
@@ -101,11 +98,6 @@ void Help::printText(float x, float y, const char *text, float r, float g, float
     printText(x, y, text, font);
 }
 
-void Help::printTextShadow(float x, float y, const char *text, float r, float g, float b, void *font) {
-    printText(x + _shadow, y - _shadow, text, 0, 0, 0, font);
-    printText(x, y, text, r, g, b, font);
-}
-
 void Help::printFps(float x, float y, void *font) {
     char fpstext[20];
     sprintf(fpstext, "FPS = %.1f", getFps());
@@ -137,7 +129,7 @@ void Help::draw() {
         // hintergrund
         drawBackground();
         // title
-        printTextShadow(-0.6f, 0.7f, TITLE, 1.0f, 1.0f, 0.0f, GLUT_BITMAP_TIMES_ROMAN_24);
+        printText(-0.2f, 0.7f, TITLE, 1.0f, 1.0f, 0.0f, GLUT_BITMAP_HELVETICA_18);
         // tasten
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         float posy = 0.5f;
@@ -175,9 +167,7 @@ void Help::drawCoordSystem(GLfloat xmin, GLfloat xmax, GLfloat ymin, GLfloat yma
     if (Help::_coordSystem) { ;
         GLfloat akt_color[4];
         GLint akt_mode;
-        GLboolean cull_mode;
 
-        glGetBooleanv(GL_CULL_FACE, &cull_mode);
         glDisable(GL_CULL_FACE);
         glPushAttrib(GL_ALL_ATTRIB_BITS);
         glGetFloatv(GL_CURRENT_COLOR, akt_color);
@@ -238,7 +228,6 @@ void Help::drawCoordSystem(GLfloat xmin, GLfloat xmax, GLfloat ymin, GLfloat yma
 
         gluDeleteQuadric(cone);
 
-        if (!cull_mode) glDisable(GL_CULL_FACE);
         glMatrixMode(akt_mode);
         glColor4fv(akt_color);
         glPopAttrib();
