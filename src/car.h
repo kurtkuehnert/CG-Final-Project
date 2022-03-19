@@ -10,6 +10,8 @@
 #define FRICTION 0.995f
 #define STEERING_FRICTION 0.95f
 #define ACCELERATION 0.1f
+#define MAX_DOOR_ANGLE 60.0f
+#define DOOR_SPEED 1.0f
 
 class Car {
 public:
@@ -19,6 +21,10 @@ public:
 
     void update(float direction, float steering);
 
+    void toggleLeftDoor();
+
+    void toggleRightDoor();
+
     void draw();
 
 private:
@@ -27,5 +33,9 @@ private:
     float _rotation_angle = 0.0f;
     float _steering_angle = 0.0f;
     float _wheel_rotation = 0.0f;
+    float _door_left_angle = 0.0f;
+    float _door_right_angle = 0.0f;
+    bool _door_left_open = false;
+    bool _door_right_open = false;
     Object *_model;
 };

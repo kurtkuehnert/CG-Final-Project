@@ -42,8 +42,17 @@ void drawScene() {
     if (Key::specialKeyState(GLUT_KEY_LEFT)) steering++;
     if (Key::specialKeyState(GLUT_KEY_RIGHT)) steering--;
 
+    if (1 == Key::keyState('<')) {
+        car.toggleLeftDoor();
+    }
+    if (1 == Key::keyState('>')) {
+        car.toggleRightDoor();
+    }
+
     car.update(static_cast<float>(acceleration), static_cast<float>(steering));
     car.draw();
+
+    // objects["house.obj"].drawAll();
 }
 
 void setCamera() {
@@ -111,7 +120,6 @@ void displayFunc() {
     setCamera();
 
     Help::drawCoordSystem(-8, 10, -8, 10, -8, 10);
-
 
     drawScene();
     Help::draw();

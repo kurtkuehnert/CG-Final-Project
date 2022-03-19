@@ -3,60 +3,12 @@
 #include "object.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
+#define TINYOBJLOADER_USE_MAPBOX_EARCUT
 
 #include "../Include/tiny_obj_loader.h"
 
 #include "assets.h"
 #include "window.h"
-
-void Object::load(const string &filename) {
-    ObjReader reader;
-    ObjReaderConfig config;
-    config.mtl_search_path = MATERIAL_PATH;
-
-    if (!reader.ParseFromFile(filename, config)) {
-        if (!reader.Error().empty()) {
-            cerr << "TinyObjReader: " << reader.Error();
-        }
-
-        exit(1);
-    }
-
-    if (!reader.Warning().empty()) {
-        cout << "TinyObjReader: " << reader.Warning();
-    }
-
-    auto &attrib = reader.GetAttrib();
-    auto &shapes = reader.GetShapes();
-    auto &materials = reader.GetMaterials();
-
-    for (const auto &shape: shapes) {
-        int material_id = shape.mesh.material_ids[0];
-        const material_t *material;
-
-        if (material_id == -1) material = &DEFAULT_MATERIAL;
-        else material = &materials[material_id];
-
-        meshes[shape.name] = Mesh(shape.mesh, attrib, material);
-    }
-}
-
-
-void Object::draw(const string &mesh_name) {
-    meshes[mesh_name].draw();
-}
-
-void Object::free() {
-    for (auto &[_, mesh]: meshes) {
-        mesh.free();
-    }
-}
-
-void Object::drawAll() const {
-    for (const auto &[_, mesh]: meshes) {
-        mesh.draw();
-    }
-}
 
 Mesh::Mesh(const mesh_t &mesh, const attrib_t &attributes, const material_t *material) {
     vertex_count = static_cast<GLsizei>(mesh.indices.size());
@@ -134,6 +86,10 @@ Mesh::Mesh(const mesh_t &mesh, const attrib_t &attributes, const material_t *mat
     shininess = material->shininess;
 }
 
+void Mesh::setOpacity(float opacity) {
+    diffuse[3] = opacity;
+}
+
 void Mesh::draw() const {
     glColor4fv(diffuse);
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
@@ -142,9 +98,16 @@ void Mesh::draw() const {
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
+    if (GlobalState::texturing && !diffuse_texname.empty()) {
+        glEnable(GL_TEXTURE_2D);
+        textures[diffuse_texname].bind();
+    }
 
-    glEnable(GL_TEXTURE_2D);
-    if (!diffuse_texname.empty() && GlobalState::texturing) textures[diffuse_texname].bind();
+    if (GlobalState::blending && diffuse[3] < 1.0f) {
+        glEnable(GL_BLEND);
+        glDisable(GL_DEPTH);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
 
     glEnableClientState(GL_VERTEX_ARRAY);
     if (has_normals) glEnableClientState(GL_NORMAL_ARRAY);
@@ -165,6 +128,8 @@ void Mesh::draw() const {
     if (has_texcoords) glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
     glBindTexture(GL_TEXTURE_2D, 0);
+    glEnable(GL_DEPTH);
+    glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
 }
 
@@ -174,3 +139,54 @@ void Mesh::free() {
     has_normals = false;
     has_texcoords = false;
 }
+
+void Object::load(const string &filename) {
+    ObjReader reader;
+    ObjReaderConfig config;
+    config.mtl_search_path = MATERIAL_PATH;
+
+    if (!reader.ParseFromFile(filename, config)) {
+        if (!reader.Error().empty()) {
+            cerr << "TinyObjReader: " << reader.Error();
+        }
+
+        exit(1);
+    }
+
+    if (!reader.Warning().empty()) {
+        cout << "TinyObjReader: " << reader.Warning();
+    }
+
+    auto &attrib = reader.GetAttrib();
+    auto &shapes = reader.GetShapes();
+    auto &materials = reader.GetMaterials();
+
+    for (const auto &shape: shapes) {
+        int material_id = shape.mesh.material_ids[0];
+        const material_t *material;
+
+        if (material_id == -1) material = &DEFAULT_MATERIAL;
+        else material = &materials[material_id];
+
+        meshes[shape.name] = Mesh(shape.mesh, attrib, material);
+    }
+}
+
+
+Mesh *Object::getMesh(const string &mesh_name) {
+    return &meshes[mesh_name];
+}
+
+void Object::free() {
+    for (auto &[_, mesh]: meshes) {
+        mesh.free();
+    }
+}
+
+void Object::drawAll() const {
+    for (const auto &[_, mesh]: meshes) {
+        mesh.draw();
+    }
+}
+
+

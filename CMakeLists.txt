@@ -17,6 +17,6 @@ add_executable(Main
     src/window.cpp
     src/assets.cpp
     src/car.cpp
-    src/object.cpp)
+    src/object.cpp Include/mapbox/earcut.hpp)
 
 target_link_libraries(Main ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES} ${GLM_LIBRARIES})

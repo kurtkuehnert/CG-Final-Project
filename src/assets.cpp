@@ -9,6 +9,7 @@ const string texture_files[] = {
 
 const string object_files[] = {
     "car.obj",
+    // "house.obj"
 };
 
 

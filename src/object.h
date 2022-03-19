@@ -26,6 +26,8 @@ public:
 
     Mesh(const mesh_t &mesh, const attrib_t &attributes, const material_t *material);
 
+    void setOpacity(float opacity);
+
     void draw() const;
 
     void free();
@@ -53,7 +55,7 @@ class Object {
 public:
     void load(const string &filename);
 
-    void draw(const string &mesh_name);
+    Mesh *getMesh(const string &mesh_name);
 
     void drawAll() const;
 
