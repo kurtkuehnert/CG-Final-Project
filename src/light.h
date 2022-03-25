@@ -1,37 +1,15 @@
-#ifndef LIGHT_H
-#define LIGHT_H
+#pragma once
 
-#ifdef _WIN32
-#include "Include/glew.h"
-#include "Include/freeglut.h"
-#elif __linux__
+#include "../Include/lib.h"
 
-#include "GL/glew.h"
-#include "GL/glut.h"
-
-#elif __APPLE__
-#include "Include/glew.h"
-#include "Include/freeglut.h"
-#endif
-
-// Farbe setzen fuer Farb- und Beleuchtungsmodus
-void setColor(GLfloat r, GLfloat g, GLfloat b);
-
-// Material setzen (nur fuer Beleuchtungsmodus)
 void setMaterial(GLenum face, GLfloat amb[4], GLfloat diff[4], GLfloat spec[4], GLfloat shine, GLfloat emis[4]);
 
-void setMaterial(GLenum face, float red, float green, float blue, float alpha, float specular, float shininess,
-                 float emission);
-
-// Lichtquelle(n) setzen
 void setLights();
 
-// Standardeinstellung f�r Farbe und Beleuchtung
-void setDefaultLightAndMaterial(GLboolean lightMode = false);
-
-// Abstraktion der OpenGL Lichtquellen
 class Light {
 public:
+    Light() {}
+
     // Konstructior, id zwischen 0-7 muss uebergeben werden
     Light(int num);
 
@@ -99,5 +77,3 @@ private:
     float spec[4];
     float att[3];
 };
-
-#endif // LIGHT_H

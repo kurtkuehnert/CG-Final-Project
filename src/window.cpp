@@ -1,21 +1,19 @@
 #include "window.h"
 #include "input.h"
 
-double GlobalState::screenSize[] = {0};
+float GlobalState::screenSize[] = {};
 bool GlobalState::wireframe = false;
 bool GlobalState::lighting = true;
 bool GlobalState::culling = false;
 bool GlobalState::texturing = true;
 bool GlobalState::blending = true;
-int GlobalState::cameraHelper[] = {0};
-float GlobalState::cameraPos[] = {0, 0};
 
 void init(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
     glutInitWindowPosition(WIN_POS_X, WIN_POS_Y);
     glutInitDisplayMode(DISPLAY_MODE);
-    glutCreateWindow(TITLE);
+    glutCreateWindow(TITLE.c_str());
     glewInit();
 
     glEnable(GL_DEPTH_TEST);
@@ -51,8 +49,8 @@ void reshapeFunc(int width, int height) {
     glLoadIdentity();
     gluPerspective(FOV, static_cast<double>(width) / static_cast<double>(height), NEAR, FAR);
     glViewport(0, 0, width, height);
-    GlobalState::screenSize[0] = static_cast<double>(width);
-    GlobalState::screenSize[1] = static_cast<double>(height);
+    GlobalState::screenSize[0] = static_cast<float>(width);
+    GlobalState::screenSize[1] = static_cast<float>(height);
 }
 
 void menuFunc(int Item) {

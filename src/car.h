@@ -1,6 +1,7 @@
 #pragma once
 
 #include "object.h"
+#include "vector.h"
 
 #define MAX_SPEED_FORWARD 30.0f
 #define MAX_SPEED_BACKWARD 5.0f
@@ -15,8 +16,6 @@
 
 class Car {
 public:
-    Car();
-
     explicit Car(Object *model);
 
     void update(float direction, float steering);
@@ -27,8 +26,12 @@ public:
 
     void draw();
 
+    Vec3 getPosition();
+
+    float getRotation();
+
 private:
-    vec3 _position = {0.0f, 0.0f, 0.0f};
+    Vec3 _position = {0.0f, 0.0f, 3.0f};
     float _speed = 0.0f;
     float _rotation_angle = 0.0f;
     float _steering_angle = 0.0f;

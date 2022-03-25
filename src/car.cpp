@@ -1,17 +1,10 @@
 #include "car.h"
+#include "menu.h"
 
 #include <cmath>
+#include <algorithm>
 
-#include "light.h"
-#include "help.h"
-
-Car::Car() : _model(nullptr) {}
-
-Car::Car(Object *model) : _model(model) {
-    _model->getMesh("windows")->setOpacity(0.5f);
-    _model->getMesh("door_window_left")->setOpacity(0.5f);
-    _model->getMesh("door_window_right")->setOpacity(0.5f);
-}
+Car::Car(Object *model) : _model(model) {}
 
 void Car::update(float direction, float steering) {
     _speed += direction * ACCELERATION;
@@ -24,24 +17,24 @@ void Car::update(float direction, float steering) {
     _door_left_angle = clamp(_door_left_angle, -MAX_DOOR_ANGLE, 0.0f);
     _door_right_angle = clamp(_door_right_angle, 0.0f, MAX_DOOR_ANGLE);
 
-    float delta_time = 1.0f / 60.0f;
-    float distance = _speed * delta_time;
+    float distance = _speed * Menu::getDelta();
 
     _wheel_rotation += distance * 360.0f / WHEEL_CIRCUMFERENCE;
 
-    float old_angle = radians(_rotation_angle);
-    vec3 old_direction(sinf(old_angle), 0, cosf(old_angle));
-    vec3 old_front_point = old_direction * AXEL_DISTANCE;
+    float old_angle = _rotation_angle * M_PIf32 / 180.0f;
+    Vec3 old_direction(sinf(old_angle), 0, cosf(old_angle));
+    Vec3 old_front_point = old_direction * AXEL_DISTANCE;
 
-    float new_angle = radians(_rotation_angle + _steering_angle);
-    vec3 new_direction(sin(new_angle), 0, cos(new_angle));
-    vec3 new_front_point = old_front_point + new_direction * distance;
+    float new_angle = (_rotation_angle + _steering_angle) * M_PIf32 / 180.0f;;
+    Vec3 new_direction(sin(new_angle), 0, cos(new_angle));
+    Vec3 new_front_point = old_front_point + new_direction * distance;
 
-    vec3 current_direction = normalize(new_front_point);
+    Vec3 current_direction = new_front_point;
+    current_direction.normalize();
 
-    _position += new_front_point - current_direction * AXEL_DISTANCE;
-    _rotation_angle = degrees(asinf(current_direction.x));
-    if (current_direction.z < 0) _rotation_angle = 180.0f - _rotation_angle;
+    _position = _position + new_front_point - current_direction * AXEL_DISTANCE;
+    _rotation_angle = asinf(current_direction.x()) * 180.0f / M_PIf32;
+    if (current_direction.z() < 0) _rotation_angle = 180.0f - _rotation_angle;
 
     _speed *= FRICTION;
 
@@ -50,21 +43,21 @@ void Car::update(float direction, float steering) {
 
 void Car::draw() {
     glPushMatrix();
-    glTranslatef(_position.x, 0, _position.z);
+    glTranslatef(_position.x(), 0, _position.z());
     glRotatef(_rotation_angle, 0, 1, 0);
     glTranslatef(0.0f, 0.0f, 1.240854f);
 
     // Help::drawCoordSystem(-2, 2, -2, 2, -2, 2);
 
-    _model->getMesh("body")->draw();
-    _model->getMesh("interior")->draw();
+    _model->draw("body");
+    _model->draw("interior");
 
     glPushMatrix();
     glTranslatef(0.0f, 0.324157f, -1.240854f);
     glRotatef(_wheel_rotation, 1, 0, 0);
     glTranslatef(0.0f, -0.324157f, 1.240854f);
-    _model->getMesh("wheel_back_left")->draw();
-    _model->getMesh("wheel_back_right")->draw();
+    _model->draw("wheel_back_left");
+    _model->draw("wheel_back_right");
     glPopMatrix();
 
     glPushMatrix();
@@ -72,7 +65,7 @@ void Car::draw() {
     glRotatef(_steering_angle, 0, 1, 0);
     glRotatef(_wheel_rotation, 1, 0, 0);
     glTranslatef(-0.652940f, -0.324157f, -1.07147f);
-    _model->getMesh("wheel_front_left")->draw();
+    _model->draw("wheel_front_left");
     glPopMatrix();
 
     glPushMatrix();
@@ -80,37 +73,37 @@ void Car::draw() {
     glRotatef(_steering_angle, 0, 1, 0);
     glRotatef(_wheel_rotation, 1, 0, 0);
     glTranslatef(0.652940f, -0.324157f, -1.07147f);
-    _model->getMesh("wheel_front_right")->draw();
+    _model->draw("wheel_front_right");
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(0.839348f, 0.0f, 0.650257f);
     glRotatef(_door_left_angle, 0, 1, 0);
     glTranslatef(-0.839348f, 0.0f, -0.650257f);
-    _model->getMesh("door_left")->draw();
+    _model->draw("door_left");
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(-0.839348f, 0.0f, 0.650257f);
     glRotatef(_door_right_angle, 0, 1, 0);
     glTranslatef(0.839348f, 0.0f, -0.650257f);
-    _model->getMesh("door_right")->draw();
+    _model->draw("door_right");
     glPopMatrix();
 
-    _model->getMesh("windows")->draw();
+    _model->draw("windows");
 
     glPushMatrix();
     glTranslatef(0.839348f, 0.0f, 0.650257f);
     glRotatef(_door_left_angle, 0, 1, 0);
     glTranslatef(-0.839348f, 0.0f, -0.650257f);
-    _model->getMesh("door_window_left")->draw();
+    _model->draw("door_window_left");
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(-0.839348f, 0.0f, 0.650257f);
     glRotatef(_door_right_angle, 0, 1, 0);
     glTranslatef(0.839348f, 0.0f, -0.650257f);
-    _model->getMesh("door_window_right")->draw();
+    _model->draw("door_window_right");
     glPopMatrix();
 
     glPopMatrix();
@@ -122,6 +115,14 @@ void Car::toggleLeftDoor() {
 
 void Car::toggleRightDoor() {
     _door_right_open = !_door_right_open;
+}
+
+Vec3 Car::getPosition() {
+    return _position + Vec3(0, 1.3f, 0);
+}
+
+float Car::getRotation() {
+    return _rotation_angle;
 }
 
 

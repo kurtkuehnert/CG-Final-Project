@@ -1,65 +1,12 @@
 #include "light.h"
 
-// Farbe setzen fuer Farb- und Beleuchtungsmodus
-void setColor(GLfloat r, GLfloat g, GLfloat b) {
-    glColor3f(r, g, b);
-    GLfloat amb_diff[4] = {r, g, b, 1};
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, amb_diff);
-};
-
-
-void setMaterial(GLenum face, GLfloat amb[4], GLfloat diff[4], GLfloat spec[4], GLfloat shine, GLfloat emis[4])
-// Aktualisierung des OpenGL Materials
-{
+void setMaterial(GLenum face, GLfloat amb[4], GLfloat diff[4], GLfloat spec[4], GLfloat shine, GLfloat emis[4]) {
     glMaterialfv(face, GL_AMBIENT, amb);
     glMaterialfv(face, GL_DIFFUSE, diff);
     glMaterialfv(face, GL_SPECULAR, spec);
     glMaterialf(face, GL_SHININESS, shine);
     glMaterialfv(face, GL_EMISSION, emis);
     glColor4fv(diff);
-}
-
-void setMaterial(GLenum face, float red, float green, float blue, float alpha, float specular, float shininess,
-                 float emission) {
-    float color[4];
-    float amb[4];
-    float diff[4];
-    float spec[4];
-    float emis[4];
-
-    // Farbe
-    color[0] = red;
-    color[1] = green;
-    color[2] = blue;
-    color[3] = alpha;
-
-    // Material
-    amb[0] = 0.1;
-    amb[1] = 0.1;
-    amb[2] = 0.1;
-    amb[3] = alpha;
-    diff[0] = red;
-    diff[1] = green;
-    diff[2] = blue;
-    diff[3] = alpha;
-    spec[0] = specular;
-    spec[1] = specular;
-    spec[2] = specular;
-    spec[3] = alpha;
-
-    // Emission = r,g,b * emis
-    emis[0] = red * emission;
-    emis[1] = blue * emission;
-    emis[2] = green * emission;
-    emis[3] = alpha;
-
-    glColor4fv(color);
-    glMaterialfv(face, GL_AMBIENT, amb);
-    glMaterialfv(face, GL_DIFFUSE, diff);
-    glMaterialfv(face, GL_SPECULAR, spec);
-    glMaterialfv(face, GL_EMISSION, emis);
-    glMaterialf(face, GL_SHININESS, shininess);
-
 }
 
 void setLights() {

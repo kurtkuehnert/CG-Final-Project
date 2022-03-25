@@ -22,46 +22,46 @@ const material_t DEFAULT_MATERIAL = {
 
 class Mesh {
 public:
-    Mesh() {}
-
     Mesh(const mesh_t &mesh, const attrib_t &attributes, const material_t *material);
 
-    void setOpacity(float opacity);
+    ~Mesh();
 
     void draw() const;
 
     void free();
 
 private:
-    GLfloat ambient[4]{};
-    GLfloat diffuse[4]{};
-    GLfloat specular[4]{};
-    GLfloat emission[4]{};
-    GLfloat shininess;
+    GLfloat _ambient[4]{};
+    GLfloat _diffuse[4]{};
+    GLfloat _specular[4]{};
+    GLfloat _emission[4]{};
+    GLfloat _shininess;
 
-    string diffuse_texname;
+    string _texture;
 
-    GLuint vbo{};
-    GLsizei vertex_count;
+    GLuint _vbo{};
+    GLsizei _vertex_count;
 
-    GLfloat *normal_offset;
-    GLfloat *texcoord_offset;
+    GLfloat *_normal_offset;
+    GLfloat *_texcoord_offset;
 
-    bool has_normals;
-    bool has_texcoords;
+    bool _has_normals;
+    bool _has_texcoords;
 };
 
 class Object {
 public:
+    ~Object();
+
     void load(const string &filename);
 
-    Mesh *getMesh(const string &mesh_name);
+    void draw(const string &mesh_name);
 
     void drawAll() const;
 
     void free();
 
 private:
-    map<string, Mesh> meshes;
+    map<string, Mesh *> _meshes;
 };
 

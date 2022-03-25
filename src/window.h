@@ -1,14 +1,15 @@
 #pragma once
 
 #include "../Include/lib.h"
+#include <string>
 
-#define TITLE  "CG-Final-Project Kurt Kuehnert"
+const string TITLE = "CG-Final-Project Kurt Kuehnert";
 #define WIN_POS_X                 0
 #define WIN_POS_Y                 0
 #define WIN_WIDTH              1280
 #define WIN_HEIGHT              800
 #define FOV                    60.0
-#define NEAR                    1.0
+#define NEAR                    0.1
 #define FAR                  1000.0
 
 #if defined NEED_STENCIL && defined NEED_ACCUM
@@ -48,12 +49,10 @@ void menuFunc(int);
 void init(int argc, char **argv);
 
 struct GlobalState {
-    static double screenSize[2];
+    static float screenSize[2];
     static bool wireframe;
     static bool lighting;
     static bool culling;
     static bool texturing;
     static bool blending;
-    static int cameraHelper[2];
-    static float cameraPos[2];
 };
