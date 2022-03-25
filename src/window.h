@@ -3,7 +3,7 @@
 #include "../Include/lib.h"
 #include <string>
 
-const string TITLE = "CG-Final-Project Kurt Kuehnert";
+#define TITLE "CG-Final-Project Kurt Kuehnert"
 #define WIN_POS_X                 0
 #define WIN_POS_Y                 0
 #define WIN_WIDTH              1280

@@ -48,9 +48,9 @@ void drawScene() {
 
     Menu::drawCoordSystem(-8, 10, -8, 10, -8, 10);
 
-    car->draw();
+    objects["house.obj"].drawAll();
 
-    // objects["house.obj"].drawAll();
+    car->draw();
 }
 
 
@@ -93,9 +93,7 @@ int main(int argc, char **argv) {
     camera = new Camera();
 
     car = new Car(&objects["car.obj"]);
-
-    camera->update(car->getPosition(), car->getRotation());
-
+    
     light = new Light(1);
     light->enable();
     light->setPosition(0, 5, 0, 1);
