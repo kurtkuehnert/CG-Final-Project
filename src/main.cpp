@@ -48,8 +48,30 @@ void drawScene() {
 
     Menu::drawCoordSystem(-8, 10, -8, 10, -8, 10);
 
-    objects["house.obj"].drawAll();
+    glPushMatrix();
+    glTranslatef(0.0f, -0.05f, 0.0f);
+    glScalef(1000, 1000, 1000);
+    objects["ground.obj"].drawAll();
+    glPopMatrix();
 
+    glPushMatrix();
+    auto position = car->getPosition();
+    glTranslatef(position.x(), position.y(), position.z());
+    glScalef(1000, 1000, 1000);
+    objects["skybox.obj"].drawAll();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-30.0f, 0.0f, 10.0f);
+    glScalef(1.5, 1.5, 1.5);
+    objects["house.obj"].drawAll();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(20.0f, 0.0f, -20.0f);
+    glScalef(0.3, 0.3, 0.3);
+    objects["tree.obj"].drawAll();
+    glPopMatrix();
     car->draw();
 }
 
@@ -93,7 +115,7 @@ int main(int argc, char **argv) {
     camera = new Camera();
 
     car = new Car(&objects["car.obj"]);
-    
+
     light = new Light(1);
     light->enable();
     light->setPosition(0, 5, 0, 1);

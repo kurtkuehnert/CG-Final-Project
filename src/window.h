@@ -10,7 +10,7 @@
 #define WIN_HEIGHT              800
 #define FOV                    60.0
 #define NEAR                    0.1
-#define FAR                  1000.0
+#define FAR                  1200.0
 
 #if defined NEED_STENCIL && defined NEED_ACCUM
 #define DISPLAY_MODE	GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_STENCIL | GLUT_ACCUM

@@ -5,11 +5,16 @@ map<string, Object> objects;
 
 const string texture_files[] = {
     "car.png",
+    "skybox.png",
+    "tree.png"
 };
 
 const string object_files[] = {
     "car.obj",
-    "house.obj"
+    "house.obj",
+    "skybox.obj",
+    "ground.obj",
+    "tree.obj"
 };
 
 
