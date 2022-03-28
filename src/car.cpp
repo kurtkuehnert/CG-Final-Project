@@ -4,7 +4,36 @@
 #include <cmath>
 #include <algorithm>
 
-Car::Car(Object *model) : _model(model) {}
+Car::Car(Object *model) : _model(model) {
+    _headlights[0] = new Light(1);
+    _headlights[0]->setPosition(-0.8, 0.8, 1.8, 1);
+    _headlights[0]->setDiffuse(100, 100, 80, 100);
+    _headlights[0]->setSpotlight(0, 0, 1, 45, 1);
+    _headlights[0]->setAttentuation(0, 1, 1);
+
+    _headlights[1] = new Light(2);
+    _headlights[1]->setPosition(0.8, 0.8, 1.8, 1);
+    _headlights[1]->setDiffuse(100, 100, 80, 100);
+    _headlights[1]->setSpotlight(0, 0, 1, 45, 1);
+    _headlights[1]->setAttentuation(0, 1, 1);
+
+    _break_lights[0] = new Light(3);
+    _break_lights[0]->setPosition(-0.85, 0.8, -1.9, 1);
+    _break_lights[0]->setDiffuse(10, 1, 1, 1);
+    _break_lights[0]->setAttentuation(0, 1, 1);
+
+    _break_lights[1] = new Light(4);
+    _break_lights[1]->setPosition(0.85, 0.8, -1.9, 1);
+    _break_lights[1]->setDiffuse(10, 1, 1, 1);
+    _break_lights[1]->setAttentuation(0, 1, 1);
+}
+
+Car::~Car() {
+    delete _headlights[0];
+    delete _headlights[1];
+    delete _break_lights[0];
+    delete _break_lights[1];
+}
 
 void Car::update(float direction, float steering) {
     _speed += direction * ACCELERATION;
@@ -39,7 +68,26 @@ void Car::update(float direction, float steering) {
     _speed *= FRICTION;
 
     if (fabs(_speed) > 0.1f) _steering_angle *= STEERING_FRICTION;
+
+    _break_lights[0]->enabled = direction < 0;
+    _break_lights[1]->enabled = direction < 0;
 }
+
+void Car::lights() {
+    glPushMatrix();
+    glTranslatef(_position.x(), 0, _position.z());
+    glRotatef(_rotation_angle, 0, 1, 0);
+    glTranslatef(0.0f, 0.0f, 1.240854f);
+
+    _headlights[0]->draw();
+    _headlights[1]->draw();
+
+    _break_lights[0]->draw();
+    _break_lights[1]->draw();
+
+    glPopMatrix();
+}
+
 
 void Car::draw() {
     glPushMatrix();
@@ -47,7 +95,7 @@ void Car::draw() {
     glRotatef(_rotation_angle, 0, 1, 0);
     glTranslatef(0.0f, 0.0f, 1.240854f);
 
-    // Help::drawCoordSystem(-2, 2, -2, 2, -2, 2);
+    //     Menu::drawCoordSystem(-2, 2, -2, 2, -2, 2);
 
     _model->draw("body");
     _model->draw("interior");
@@ -125,6 +173,9 @@ float Car::getRotation() {
     return _rotation_angle;
 }
 
-
+void Car::toggleHeadlights() {
+    _headlights[0]->toggle();
+    _headlights[1]->toggle();
+}
 
 

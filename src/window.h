@@ -11,16 +11,7 @@
 #define FOV                    60.0
 #define NEAR                    0.1
 #define FAR                  1200.0
-
-#if defined NEED_STENCIL && defined NEED_ACCUM
-#define DISPLAY_MODE	GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_STENCIL | GLUT_ACCUM
-#elif defined NEED_STENCIL
-#define DISPLAY_MODE	GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_STENCIL
-#elif defined NEED_ACCUM
-#define DISPLAY_MODE	GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_ACCUM
-#else
 #define DISPLAY_MODE    GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE
-#endif
 
 #define MENU_TEXT_WIREFRAME   "Toggle Wireframe on/off"
 #define MENU_TEXT_LIGHTING    "Toggle Lighting on/off"

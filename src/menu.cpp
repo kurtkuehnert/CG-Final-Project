@@ -5,17 +5,19 @@
 #include "window.h"
 
 const string column1[] = {
-
     "Interactions",
     "1        Observer Camera",
     "2        Third Person Camera",
     "3        First Person Camera",
-    "<        Toggle Left Car Door open/close",
-    ">        Toggle Right Car Door open/close",
+    "g        Toggle Sun on/off",
     "up       Accelerate Forwards",
     "down     Accelerate Backwards",
     "left     Steer Left",
     "right    Steer Right",
+    "<        Toggle Left Car Door open/close",
+    ">        Toggle Right Car Door open/close",
+    "*        Toggle Headlights on/off",
+
 };
 
 const string column2[] = {
@@ -33,13 +35,12 @@ const string column2[] = {
     "c       Toggle Culling on/off",
     "t       Toggle Texturing on/off",
     "b       Toggle Blending on/off",
-    "k       Toggle Coordinate System on/off",
     "ESC     Exit",
 };
 
 bool  Menu::_help = false;
 bool  Menu::_fps = false;
-bool  Menu::_coordSystem = true;
+bool  Menu::_coordSystem = false;
 float Menu::_deltaTime = 0;
 
 void Menu::toggleHelp() {

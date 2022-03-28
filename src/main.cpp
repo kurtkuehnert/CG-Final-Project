@@ -10,7 +10,7 @@
 #include "camera.h"
 
 Car *car;
-Light *light;
+Light *sun;
 Camera *camera;
 
 void updateCar() {
@@ -23,42 +23,29 @@ void updateCar() {
     if (Key::specialKeyState(GLUT_KEY_RIGHT)) steering--;
     if (1 == Key::keyState('<')) car->toggleLeftDoor();
     if (1 == Key::keyState('>')) car->toggleRightDoor();
+    if (1 == Key::keyState('*')) car->toggleHeadlights();
 
     car->update(static_cast<float>(acceleration), static_cast<float>(steering));
 }
 
 void drawScene() {
-    glPolygonMode(GL_FRONT_AND_BACK, GlobalState::wireframe ? GL_LINE : GL_FILL);
-
-    if (GlobalState::culling) {
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-    } else glDisable(GL_CULL_FACE);
-
-    if (GlobalState::lighting) {
-        setLights();
-    } else glDisable(GL_LIGHTING);
-
-    light->draw();
-    light->markLightPosition();
-
-    updateCar();
-
-    camera->update(car->getPosition(), car->getRotation());
-
     Menu::drawCoordSystem(-8, 10, -8, 10, -8, 10);
+
+    if (sun->enabled) {
+        glPushMatrix();
+        auto position = car->getPosition();
+        glTranslatef(position.x(), position.y(), position.z());
+        glScalef(1000, 1000, 1000);
+        glCullFace(GL_FRONT);
+        objects["skybox.obj"].drawAll();
+        glCullFace(GL_BACK);
+        glPopMatrix();
+    }
 
     glPushMatrix();
     glTranslatef(0.0f, -0.05f, 0.0f);
-    glScalef(1000, 1000, 1000);
+    glScalef(1000, 1, 1000);
     objects["ground.obj"].drawAll();
-    glPopMatrix();
-
-    glPushMatrix();
-    auto position = car->getPosition();
-    glTranslatef(position.x(), position.y(), position.z());
-    glScalef(1000, 1000, 1000);
-    objects["skybox.obj"].drawAll();
     glPopMatrix();
 
     glPushMatrix();
@@ -72,14 +59,12 @@ void drawScene() {
     glScalef(0.3, 0.3, 0.3);
     objects["tree.obj"].drawAll();
     glPopMatrix();
+
     car->draw();
 }
 
-
 void displayFunc() {
-    if (Key::keyState(27))
-        exit(0);
-
+    if (1 == Key::keyState(27)) exit(0);
     if (1 == Key::keyState('f')) Menu::toggleFps();
     if (1 == Key::keyState('h')) Menu::toggleHelp();
     if (1 == Key::keyState('k')) Menu::toggleCoordSystem();
@@ -91,15 +76,32 @@ void displayFunc() {
     if (1 == Key::keyState('1')) camera->setMode(Observer);
     if (1 == Key::keyState('2')) camera->setMode(ThirdPerson);
     if (1 == Key::keyState('3')) camera->setMode(FirstPerson);
+    if (1 == Key::keyState('g')) sun->toggle();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    glPolygonMode(GL_FRONT_AND_BACK, GlobalState::wireframe ? GL_LINE : GL_FILL);
+
+    if (GlobalState::culling) {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    } else glDisable(GL_CULL_FACE);
+
+    if (GlobalState::lighting) {
+        setLights();
+    } else glDisable(GL_LIGHTING);
+
+    updateCar();
+
+    camera->update(car->getPosition(), car->getRotation());
+
+    sun->draw();
+    car->lights();
+
     Menu::update();
-
     drawScene();
-
     Menu::draw();
 
     glFlush();
@@ -116,14 +118,13 @@ int main(int argc, char **argv) {
 
     car = new Car(&objects["car.obj"]);
 
-    light = new Light(1);
-    light->enable();
-    light->setPosition(0, 5, 0, 1);
+    sun = new Light(0);
+    sun->setPosition(-5, 10, 10, 0);
 
     glutMainLoop();
 
     delete car;
-    delete light;
+    delete sun;
     delete camera;
 
     return 0;

@@ -2,6 +2,7 @@
 
 #include "object.h"
 #include "vector.h"
+#include "light.h"
 
 #define MAX_SPEED_FORWARD 30.0f
 #define MAX_SPEED_BACKWARD 5.0f
@@ -18,11 +19,17 @@ class Car {
 public:
     explicit Car(Object *model);
 
+    ~Car();
+
     void update(float direction, float steering);
 
     void toggleLeftDoor();
 
     void toggleRightDoor();
+
+    void toggleHeadlights();
+
+    void lights();
 
     void draw();
 
@@ -41,4 +48,6 @@ private:
     bool _door_left_open = false;
     bool _door_right_open = false;
     Object *_model;
+    Light *_headlights[2];
+    Light *_break_lights[2];
 };

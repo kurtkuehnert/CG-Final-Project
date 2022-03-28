@@ -3,7 +3,6 @@
 #include "object.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
-// #define TINYOBJLOADER_USE_MAPBOX_EARCUT
 
 #include "../Include/tiny_obj_loader.h"
 
